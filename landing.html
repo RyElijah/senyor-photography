@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SENYOR PHOTOGRAPHY & TOURS</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#ffffff; --ink:#202124; --muted:#555;
+      --accent:#7a5d47; --accent-ink:#fff;
+      --shell:#f2f2f2; --card:#f7f7f7; --border:#e5e5e5;
+      --nav:#111315;
+    }
+
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:var(--ink);background:var(--bg);line-height:1.6}
+    img{max-width:100%;display:block}
+    .container{max-width:1100px;margin:0 auto;padding:0 20px}
+    .section{padding:56px 0}
+    h1,h2,h3{line-height:1.2;margin:0 0 .5rem}
+    h1,h2{font-family:Cinzel,Georgia,serif;font-weight:700}
+    .muted{color:var(--muted)}
+    .btn{display:inline-block;padding:12px 18px;border-radius:10px;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:600;border:1px solid #0003;transition:transform .08s ease,opacity .2s ease}
+    .btn:active{transform:translateY(1px)}
+    .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--border)}
+
+    /* NAV */
+    .nav{position:sticky;top:0;z-index:30;background:var(--nav);color:#f9f9f9;border-bottom:1px solid #000}
+    .nav-inner{position:relative;display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;height:56px;gap:12px}
+    .brand{display:flex;gap:.5rem;align-items:center;text-decoration:none;color:#f9f9f9;font-weight:700;letter-spacing:.03em}
+    .brand span{font-family:Cinzel,Georgia,serif}
+    .nav-links{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:20px;align-items:center;white-space:nowrap}
+    .nav-links a{color:#f0f0f0;text-decoration:none;font-weight:600;font-size:.95rem;opacity:.9}
+    .nav-links a:hover{opacity:1}
+    .socials{justify-self:end;display:flex;gap:16px;align-items:center}
+    .socials a{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;color:#f0f0f0;opacity:.9;text-decoration:none}
+    .socials a:hover{opacity:1}
+    .socials svg{width:22px;height:22px;display:block}
+    .hamburger{display:none;background:transparent;border:0;color:#fff;font-size:24px;line-height:1;cursor:pointer}
+    @media (max-width:880px){
+      .hamburger{display:block}
+      .socials{display:none}
+      .nav-links{position:fixed;left:0;right:0;transform:none;inset:56px 0 auto 0;background:#15171a;border-bottom:1px solid #000;display:none;flex-direction:column;padding:16px 20px;gap:12px}
+      .nav-links.open{display:flex}
+    }
+
+    /* HERO (carousel) */
+    .hero{position:relative;height:54vh;min-height:380px;max-height:680px;overflow:hidden;border-bottom:1px solid var(--border)}
+    .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.25) 30%,rgba(0,0,0,.55));z-index:1}
+    .slides{position:relative;width:100%;height:100%}
+    .slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease}
+    .slide.active{opacity:1}
+    .slide img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:contrast(1.05) saturate(1.05);transform:scale(1.02)}
+
+    /* CENTERED caption */
+    .hero-content{
+      position:absolute;
+      inset:0;                 /* fill hero */
+      display:grid;            /* center both axes */
+      place-items:center;      /* center */
+      z-index:2;
+      text-align:center;
+      color:#fff;
+      padding:0 20px;
+      text-shadow:0 1px 2px rgba(0,0,0,.6)
+    }
+    .hero h1{font-size:clamp(28px,4.5vw,48px);margin-bottom:.35rem;opacity:0;transform:translateY(6px);transition:.5s ease}
+    .hero p{margin:0;opacity:.95;font-size:clamp(14px,2.4vw,18px);opacity:0;transform:translateY(6px);transition:.55s ease .05s}
+    .hero-content.show h1,.hero-content.show p{opacity:1;transform:none}
+
+    /* Hero controls */
+    .hero-controls{position:absolute;inset:auto 0 18px 0;z-index:3;display:flex;justify-content:center;gap:10px}
+    .dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.8);cursor:pointer}
+    .dot.active{background:#fff}
+    .hero-prev,.hero-next{
+      position:absolute;top:50%;transform:translateY(-50%);
+      z-index:3;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.18);
+      width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#fff;
+      font-size:20px;cursor:pointer;user-select:none
+    }
+    .hero-prev{left:14px}
+    .hero-next{right:14px}
+
+    @media (prefers-reduced-motion: reduce){
+      .slide{transition:none}
+      .hero h1,.hero p{transition:none}
+    }
+
+    /* ABOUT */
+    .about .lead{max-width:760px;margin:0 auto 28px;text-align:center}
+    .about-grid{display:grid;gap:22px;grid-template-columns:1.15fr .85fr;align-items:start}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 1px 1px rgba(0,0,0,.03)}
+    .card.content{padding:20px}
+    .subtle{font-weight:700;letter-spacing:.14em;font-size:.8rem;color:#6b6b6b;text-transform:uppercase}
+    @media (max-width:900px){.about-grid{grid-template-columns:1fr}}
+
+    /* GALLERY */
+    .gallery{background:var(--shell);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .gallery h2{text-align:center;margin-bottom:6px}
+    .gallery .grid{margin-top:22px;display:grid;gap:14px;grid-template-columns:repeat(4,1fr)}
+    .thumb{position:relative;aspect-ratio:1/1;overflow:hidden;border-radius:12px;border:1px solid var(--border);background:#ddd;cursor:zoom-in}
+    .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease, filter .35s ease}
+    .thumb::after{
+      content:"View"; position:absolute; inset:auto 10px 10px auto;
+      padding:.25rem .45rem; font-size:.75rem; letter-spacing:.08em;
+      background:rgba(0,0,0,.6); color:#fff; border-radius:6px;
+      transform:translateY(6px); opacity:0; transition:.25s ease;
+    }
+    .thumb::before{
+      content:""; position:absolute; inset:0; background:linear-gradient(0deg,rgba(0,0,0,.28),transparent 55%); opacity:0; transition:.25s ease;
+    }
+    .thumb:hover img{transform:scale(1.05); filter:contrast(1.05) saturate(1.05)}
+    .thumb:hover::before,.thumb:hover::after{opacity:1; transform:none}
+    .gallery .actions{margin-top:20px;text-align:center}
+    @media (max-width:980px){.gallery .grid{grid-template-columns:repeat(3,1fr)}}
+    @media (max-width:640px){.gallery .grid{grid-template-columns:repeat(2,1fr)}}
+
+    /* CONNECT + IG */
+    .connect{position:relative;overflow:hidden;border-bottom:1px solid var(--border);display:grid;place-items:center;min-height:320px}
+    .connect img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .connect::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.45))}
+    .connect .inner{position:relative;z-index:2;color:#fff;text-align:center;padding:32px 20px}
+    .connect h2{font-size:clamp(26px,4vw,40px);margin-bottom:8px}
+
+    .ig{padding-top:36px}
+    .ig h3{text-align:center;margin:0 0 8px}
+    .ig p{margin:0 0 16px;text-align:center}
+    .ig .strip{display:grid;gap:10px;grid-template-columns:repeat(6,1fr)}
+    .ig .item{aspect-ratio:1/1;border-radius:10px;overflow:hidden;background:#ddd;border:1px solid var(--border)}
+    .ig .item img{width:100%;height:100%;object-fit:cover}
+    @media (max-width:980px){.ig .strip{grid-template-columns:repeat(4,1fr)}}
+    @media (max-width:640px){.ig .strip{grid-template-columns:repeat(3,1fr)}}
+
+    /* FOOTER */
+    footer{background:#f9f9f9;border-top:1px solid var(--border);color:#333;font-size:.95rem}
+    .footer-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0}
+    .footer-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:flex-start}
+    .footer-links a{text-decoration:none;color:#333;font-weight:600}
+    .footer-links a:hover{color:var(--accent)}
+    .footer-socials{display:flex;gap:16px;align-items:center}
+    .footer-socials a{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;color:#333;text-decoration:none}
+    .footer-socials a:hover{opacity:.8}
+    .footer-socials svg{width:22px;height:22px;display:block}
+    .footer-bottom{border-top:1px solid var(--border);padding:12px 0;font-size:.9rem;color:#666;text-align:center}
+    @media (max-width:640px){.footer-top{flex-direction:column;align-items:flex-start}.footer-socials{align-self:flex-end}}
+
+    /* LIGHTBOX (popup) */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:60}
+    .lightbox.open{display:flex}
+    .lightbox img{max-width:min(96vw,1100px);max-height:90vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+    .lb-btn{
+      position:fixed;top:50%;transform:translateY(-50%);
+      background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
+      width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+      color:#fff;font-size:24px;cursor:pointer;user-select:none
+    }
+    .lb-prev{left:20px}
+    .lb-next{right:20px}
+    .lb-close{
+      position:fixed;top:16px;right:16px;width:42px;height:42px;border-radius:50%;
+      display:grid;place-items:center;background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.25);color:#fff;font-size:26px;cursor:pointer
+    }
+    .lb-counter{
+      position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+      color:#fff;opacity:.85;font-weight:600;font-size:.9rem
+    }
+
+    /* CONTACT POPUPS (separate but same picture) */
+    .contact-popup{
+      position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+      background:rgba(0,0,0,.85);z-index:120
+    }
+    .contact-popup.open{display:flex}
+    .contact-popup .popup-content{
+      position:relative;max-width:min(94vw,900px);max-height:90vh;border-radius:12px;overflow:hidden;
+      box-shadow:0 10px 40px rgba(0,0,0,.6);animation:cp-fade .25s ease
+    }
+    .contact-popup img{width:100%;height:auto;display:block}
+    .contact-popup .popup-close{
+      position:absolute;top:10px;right:14px;background:rgba(255,255,255,.2);border:none;
+      color:#fff;font-size:26px;border-radius:50%;width:36px;height:36px;cursor:pointer
+    }
+    @keyframes cp-fade{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="landing.html">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/>
+          <circle cx="12" cy="12" r="3" fill="#fff"/>
+        </svg>
+        <span>SENYOR PHOTOGRAPHY</span>
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#home">HOME</a>
+        <a href="about.html">ABOUT</a>
+        <a href="services.html">SERVICES</a>
+        <a href="portfolio.html">PORTFOLIO +</a>
+        <a href="#contact" id="headerContactLink">CONTACT</a>
+      </div>
+
+      <div class="socials">
+        <a href="https://www.facebook.com/haren.hernandez3?rdid=IWfGmoYsz54QItOl&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1BMataNf7q%2F" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12.06C22 6.53 17.52 2 12 2S2 6.53 2 12.06c0 5.01 3.66 9.16 8.44 9.94v-7.03H7.9v-2.9h2.54V9.41c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.45h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.9h-2.34V22c4.78-.78 8.45-4.93 8.45-9.94Z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/senyor_photography" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect><circle cx="12" cy="12" r="4"></circle>
+            <circle cx="17.5" cy="6.5" r="1.25" fill="currentColor" stroke="none"></circle>
+          </svg>
+        </a>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+    </div>
+  </nav>
+
+  <!-- HERO (carousel) -->
+  <header id="home" class="hero" aria-label="Featured slides">
+    <div class="slides" id="heroSlides" aria-live="polite"></div>
+
+    <div class="hero-content container" id="heroCaption">
+      <div>
+        <h1></h1>
+        <p></p>
+      </div>
+    </div>
+
+    <button class="hero-prev" id="heroPrev" aria-label="Previous slide">‹</button>
+    <button class="hero-next" id="heroNext" aria-label="Next slide">›</button>
+    <div class="hero-controls" id="heroDots" aria-label="Slide indicators"></div>
+  </header>
+
+  <!-- ABOUT -->
+  <section id="about" class="section about">
+    <div class="container">
+      <p class="subtle" style="text-align:center;margin-bottom:10px;">MY PHILOSPHY</p>
+      <h2 style="text-align:center;margin-bottom:8px;">Every journey is more than just a destination - it is living story waiting to be told.</h2>
+      <div class="about-grid">
+        <figure class="card"><img src="images/philo1.jpeg" alt=""></figure>
+        <div class="card content">
+          <img src="images/philo2.jpeg" alt="" style="border-radius:10px;margin-bottom:14px;">
+          <h3 style="margin:0 0 8px;">About Senyor</h3>
+          <p class="muted" style="margin:0 0 8px;">The most meaningful images come from real moments. My approach is simple: create a comfortable, relaxed space where you can be fully yourself—whether you're celebrating a milestone, embracing everyday life, or documenting love in all its forms.</p>
+          <p class="muted" style="margin:0 0 16px;">I'm not here to force perfection; I'm here to capture connection, emotion, and the small in-between details that tell your story honestly and beautifully. Every session is guided by trust, intention, and a deep appreciation for the uniqueness of each person I photograph.</p>
+          <p class="muted" style="margin:0 0 16px;">Photography is more than just pictures—it's preserving memories that deserve to be remembered and felt for years to come.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SELECTED WORKS -->
+  <section id="works" class="section gallery">
+    <div class="container">
+      <h2>Selected Works</h2>
+      <p class="muted" style="text-align:center">A few favorites from recent trips and sessions.</p>
+
+      <div class="grid" aria-label="Selected works">
+        <div class="thumb"><img src="images/selected1.jpg" alt=""></div>
+        <div class="thumb"><img src="images/selected2.jpg" alt=""></div>
+        <div class="thumb"><img src="images/selected3.jpeg" alt=""></div>
+        <div class="thumb"><img src="images/selected4.jpeg" alt=""></div>
+        <div class="thumb"><img src="images/selected5.jpeg" alt=""></div>
+        <div class="thumb"><img src="images/selected6.jpeg" alt=""></div>
+        <div class="thumb"><img src="images/selected7.jpeg" alt=""></div>
+        <div class="thumb"><img src="images/selected8.jpg" alt=""></div>
+        <div class="thumb"><img src="images/selected9.jpeg" alt=""></div>
+        <div class="thumb"><img src="images/selected10.jpg" alt=""></div>
+        <div class="thumb"><img src="images/selected11.jpeg" alt=""></div>
+        <div class="thumb"><img src="images/selected12.jpg" alt=""></div>
+        <div class="thumb"><img src="images/selected13.jpeg" alt=""></div>
+        <div class="thumb"><img src="images/selected14.jpeg" alt=""></div>
+        <div class="thumb"><img src="images/selected15.jpeg" alt=""></div>
+        <div class="thumb"><img src="images/selected16.jpeg" alt=""></div>
+        <div class="thumb"><img src="images/selected17.jpeg" alt=""></div>
+        <div class="thumb"><img src="images/selected18.jpg" alt=""></div>
+        <div class="thumb"><img src="images/selected19.jpeg" alt=""></div>
+        <div class="thumb"><img src="images/selected20.jpeg" alt=""></div>
+      </div>
+
+      <div class="actions"><a class="btn" href="portfolio.html">View All Works</a></div>
+    </div>
+  </section>
+
+  <!-- CONNECT -->
+  <section id="contact" class="connect">
+    <img class="bg" src="https://images.unsplash.com/photo-1499343245400-cddc78a01317?q=80&w=1600&auto=format&fit=crop" alt="">
+    <div class="inner container">
+      <h2>LET’S CONNECT</h2>
+      <p style="margin:0 0 16px;opacity:.95">I LOOK FORWARD TO HEARING FROM YOU AND HELPING YOU CREATE MEMORIES THAT WILL LAST A LIFETIME.</p>
+      <a class="btn" href="mailto:senyor@example.com" id="getInTouchBtn">Get in touch</a>
+    </div>
+  </section>
+
+  <!-- IG STRIP -->
+  <section class="section ig">
+    <div class="container">
+      <h3>FOLLOW ME ON INSTAGRAM</h3>
+      <p class="muted">@senyor_photography</p>
+      <div class="strip"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container footer-top">
+      <nav class="footer-links" aria-label="Footer">
+        <a href="#home">HOME</a><a href="about.html">ABOUT</a><a href="services.html">SERVICES</a><a href="portfolio.html">PORTFOLIO+</a><a href="#contact" id="footerContactLink">CONTACT</a>
+      </nav>
+      <div class="footer-socials">
+        <a href="https://www.facebook.com/haren.hernandez3?rdid=IWfGmoYsz54QItOl&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1BMataNf7q%2F" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.53 17.52 2 12 2S2 6.53 2 12.06c0 5.01 3.66 9.16 8.44 9.94v-7.03H7.9v-2.9h2.54V9.41c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.45h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.9h-2.34V22c4.78-.78 8.45-4.93 8.45-9.94Z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/senyor_photography" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect><circle cx="12" cy="12" r="4"></circle>
+            <circle cx="17.5" cy="6.5" r="1.25" fill="currentColor" stroke="none"></circle>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">© H’Photography and Tours</div>
+  </footer>
+
+  <!-- LIGHTBOX MARKUP -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <button class="lb-close" aria-label="Close">×</button>
+    <button class="lb-btn lb-prev" aria-label="Previous">‹</button>
+    <img id="lbImg" alt="">
+    <button class="lb-btn lb-next" aria-label="Next">›</button>
+    <div class="lb-counter" id="lbCounter"></div>
+  </div>
+
+  <!-- CONTACT POPUPS (separate, same picture) -->
+  <div id="contactPopupHero" class="contact-popup" aria-hidden="true">
+    <div class="popup-content">
+      <button class="popup-close" aria-label="Close">×</button>
+      <img src="images/contact.jpeg" alt="Contact Senyor Photography">
+    </div>
+  </div>
+
+  <div id="contactPopupNav" class="contact-popup" aria-hidden="true">
+    <div class="popup-content">
+      <button class="popup-close" aria-label="Close">×</button>
+      <img src="images/contact.jpeg" alt="Contact Senyor Photography">
+    </div>
+  </div>
+
+  <script>
+    // Mobile nav toggle
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    hamburger?.addEventListener('click', () => navLinks.classList.toggle('open'));
+    navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('open')));
+
+    /* ===== HERO CAROUSEL ===== */
+    (function(){
+      const slidesData = [
+        { img: 'images/selected3.jpeg',  title: 'H’Photography and Tours',          text: 'WEDDING | FAMILY | KIMONO | SOLO | SCENERY & LANDSCAPE' },
+        { img: 'images/proposal1.jpeg', title: 'WEDDING',          text: 'PHOTOGRAPHY' },
+        { img: 'images/proposal3.jpeg',  title: 'FAMILY',   text: 'PHOTOGRAPHY' },
+        { img: 'images/kimono4.jpg',  title: 'KIMONO',   text: 'PHOTOGRAPHY' },
+        { img: 'images/selected12.jpg',  title: 'SOLO',   text: 'PHOTOGRAPHY' },
+        { img: 'images/scenery2.jpeg',  title: 'SCENERY & LANDSCAPE',   text: 'PHOTOGRAPHY' }
+      ];
+
+      const slidesRoot = document.getElementById('heroSlides');
+      const caption = document.getElementById('heroCaption');
+      const h1 = caption.querySelector('h1');
+      const p  = caption.querySelector('p');
+      const prevBtn = document.getElementById('heroPrev');
+      const nextBtn = document.getElementById('heroNext');
+      const dotsRoot = document.getElementById('heroDots');
+
+      // Build slides + dots
+      slidesData.forEach((s, i) => {
+        const d = document.createElement('div');
+        d.className = 'slide' + (i===0 ? ' active' : '');
+        d.innerHTML = `<img class="bg" src="${s.img}" alt="">`;
+        slidesRoot.appendChild(d);
+
+        const dot = document.createElement('button');
+        dot.className = 'dot' + (i===0 ? ' active' : '');
+        dot.setAttribute('aria-label', `Go to slide ${i+1}`);
+        dot.addEventListener('click', ()=>go(i, true));
+        dotsRoot.appendChild(dot);
+      });
+
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const dots = Array.from(document.querySelectorAll('.dot'));
+      let i = 0;
+      let timer = null;
+      const delay = 7000;
+
+      function render(){
+        slides.forEach((s, idx)=> s.classList.toggle('active', idx===i));
+        dots.forEach((d, idx)=> d.classList.toggle('active', idx===i));
+        caption.classList.remove('show');
+        setTimeout(()=>{
+          h1.textContent = slidesData[i].title;
+          p.textContent  = slidesData[i].text;
+          caption.classList.add('show');
+        }, 10);
+      }
+
+      function next(manual=false){ i = (i+1) % slides.length; render(); if(!manual) restart(); }
+      function prev(){ i = (i-1+slides.length) % slides.length; render(); restart(); }
+      function go(idx, manual=false){ i = idx; render(); if(!manual) restart(); }
+
+      function start(){ timer = setInterval(next, delay); }
+      function stop(){ clearInterval(timer); timer = null; }
+      function restart(){ stop(); start(); }
+
+      // Init
+      h1.textContent = slidesData[0].title;
+      p.textContent  = slidesData[0].text;
+      caption.classList.add('show');
+      start();
+
+      nextBtn.addEventListener('click', ()=> next(true));
+      prevBtn.addEventListener('click', prev);
+
+      // Pause on hover/focus
+      slidesRoot.addEventListener('mouseenter', stop);
+      slidesRoot.addEventListener('mouseleave', start);
+      caption.addEventListener('mouseenter', stop);
+      caption.addEventListener('mouseleave', start);
+      [prevBtn, nextBtn, ...dots].forEach(el=>{
+        el.addEventListener('focusin', stop);
+        el.addEventListener('focusout', start);
+      });
+
+      // Keyboard
+      document.addEventListener('keydown', (e)=>{
+        if (e.key === 'ArrowRight') next(true);
+        if (e.key === 'ArrowLeft')  prev();
+      });
+    })();
+
+    /* ===== Lightbox for Selected Works ===== */
+    const thumbs = Array.from(document.querySelectorAll('#works .grid img'));
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbCounter = document.getElementById('lbCounter');
+    const btnPrev = lightbox.querySelector('.lb-prev');
+    const btnNext = lightbox.querySelector('.lb-next');
+    const btnClose = lightbox.querySelector('.lb-close');
+
+    let current = 0;
+
+    function openLightbox(index){
+      current = index;
+      const src = thumbs[current].getAttribute('src');
+      const alt = thumbs[current].getAttribute('alt') || '';
+      lbImg.src = src; lbImg.alt = alt;
+      lbCounter.textContent = (current+1) + ' / ' + thumbs.length;
+      lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+    }
+
+    function closeLightbox(){
+      lightbox.classList.remove('open');
+      lightbox.setAttribute('aria-hidden','true');
+      document.body.style.overflow='';
+      lbImg.src = lbImg.src;
+    }
+
+    function nextImg(){ current = (current + 1) % thumbs.length; openLightbox(current); }
+    function prevImg(){ current = (current - 1 + thumbs.length) % thumbs.length; openLightbox(current); }
+
+    thumbs.forEach((img, i) => {
+      img.addEventListener('click', () => openLightbox(i));
+      img.style.cursor = 'zoom-in';
+    });
+
+    btnNext.addEventListener('click', e => { e.stopPropagation(); nextImg(); });
+    btnPrev.addEventListener('click', e => { e.stopPropagation(); prevImg(); });
+    btnClose.addEventListener('click', e => { e.stopPropagation(); closeLightbox(); });
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') nextImg();
+      if (e.key === 'ArrowLeft') prevImg();
+    });
+
+    /* ===== CONTACT POPUPS (separate, same image) ===== */
+    (function(){
+      const popupHero = document.getElementById('contactPopupHero');  // for Get in touch button
+      const popupNav  = document.getElementById('contactPopupNav');   // for header/footer CONTACT links
+
+      const getInTouchBtn = document.getElementById('getInTouchBtn');
+      const headerContact = document.getElementById('headerContactLink');
+      const footerContact = document.getElementById('footerContactLink');
+
+      function openPopup(p){ p.classList.add('open'); p.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+      function closePopup(p){ p.classList.remove('open'); p.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+
+      function wirePopup(popupEl){
+        const closeBtn = popupEl.querySelector('.popup-close');
+        closeBtn.addEventListener('click', () => closePopup(popupEl));
+        popupEl.addEventListener('click', (e) => { if (e.target === popupEl) closePopup(popupEl); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && popupEl.classList.contains('open')) closePopup(popupEl); });
+      }
+
+      if (getInTouchBtn && popupHero){
+        getInTouchBtn.addEventListener('click', (e) => {
+          if (e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey){
+            e.preventDefault();
+            openPopup(popupHero);
+          }
+        });
+        wirePopup(popupHero);
+      }
+
+      [headerContact, footerContact].forEach(link => {
+        if (link && popupNav){
+          link.addEventListener('click', (e) => {
+            if (e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey){
+              e.preventDefault();
+              setTimeout(() => openPopup(popupNav), 150);
+            }
+          });
+        }
+      });
+      wirePopup(popupNav);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kimono Portraits — SENYOR PHOTOGRAPHY & TOURS</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#ffffff; --ink:#202124; --muted:#555;
+      --accent:#7a5d47; --accent-ink:#fff;
+      --shell:#f2f2f2; --border:#e5e5e5; --nav:#111315;
+    }
+    body{margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);color:var(--ink);line-height:1.6}
+    *,*::before,*::after{box-sizing:border-box}
+    img{max-width:100%;display:block}
+    h1,h2{font-family:Cinzel,Georgia,serif;font-weight:700;margin:0 0 .5rem}
+
+    .container{max-width:1100px;margin:auto;padding:0 20px}
+    .nav{position:sticky;top:0;background:var(--nav);border-bottom:1px solid #000;color:#fff;z-index:30}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;height:56px}
+    .brand{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:#fff;font-weight:700}
+    .brand span{font-family:Cinzel,serif}
+    .nav a{text-decoration:none;color:#eee;font-weight:600;margin-left:20px}
+    .nav a:hover{color:#fff}
+
+    .hero{position:relative;overflow:hidden;height:38vh;min-height:260px;display:grid;place-items:center}
+    .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .hero::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.45)}
+    .hero h1{position:relative;color:#fff;font-size:clamp(28px,4vw,44px);text-shadow:0 1px 3px rgba(0,0,0,.6)}
+
+    .grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr);margin:40px 0}
+    .thumb{border-radius:10px;overflow:hidden;border:1px solid var(--border);cursor:zoom-in}
+    .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+    .thumb:hover img{transform:scale(1.05)}
+    @media (max-width:880px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:580px){.grid{grid-template-columns:1fr}}
+
+    footer{text-align:center;border-top:1px solid var(--border);padding:16px 0;color:#666;font-size:.9rem}
+    .back-btn{display:inline-block;margin-top:16px;text-decoration:none;padding:10px 16px;background:var(--accent);color:#fff;border-radius:8px}
+
+    /* LIGHTBOX */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:60}
+    .lightbox.open{display:flex}
+    .lightbox img{max-width:min(96vw,1100px);max-height:90vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+    .lb-btn{
+      position:fixed;top:50%;transform:translateY(-50%);
+      background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
+      width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+      color:#fff;font-size:24px;cursor:pointer;user-select:none
+    }
+    .lb-prev{left:20px}
+    .lb-next{right:20px}
+    .lb-close{
+      position:fixed;top:16px;right:16px;width:42px;height:42px;border-radius:50%;
+      display:grid;place-items:center;background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.25);color:#fff;font-size:26px;cursor:pointer
+    }
+    .lb-counter{
+      position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+      color:#fff;opacity:.85;font-weight:600;font-size:.9rem
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="../portfolio.html" class="brand">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/>
+          <circle cx="12" cy="12" r="3" fill="#fff"/>
+        </svg>
+        <span>SENYOR PHOTOGRAPHY</span>
+      </a>
+      <div>
+        <a href="../landing.html">HOME</a>
+        <a href="../about.html">ABOUT</a>
+        <a href="../services.html">SERVICES</a>
+        <a href="../portfolio.html">PORTFOLIO</a>
+      </div>
+    </div>
+  </nav>
+
+
+  <header class="hero">
+    <img src="../images/scenery11.jpeg" alt="">
+    <h1>Scenery</h1>
+  </header>
+
+ 
+  <main class="container">
+    <p style="text-align:center;max-width:700px;margin:24px auto;color:#555">
+      A love letter to locations. Wide frames, honest light, and small human moments within grand spaces—images that feel like stepping back into the air, color, and rhythm of the day.
+    </p>
+
+    <div class="grid" id="gallery">
+      <div class="thumb"><img src="../images/scenery1.jpeg" alt=""></div>
+      <div class="thumb"><img src="../images/scenery2.jpeg" alt=""></div>
+      <div class="thumb"><img src="../images/scenery3.jpeg" alt=""></div>
+      <div class="thumb"><img src="../images/scenery4.jpeg" alt=""></div>
+      <div class="thumb"><img src="../images/scenery5.jpeg" alt=""></div>
+      <div class="thumb"><img src="../images/selected6.jpeg" alt=""></div>
+      <div class="thumb"><img src="../images/scenery7.jpeg" alt=""></div>
+      <div class="thumb"><img src="../images/scenery8.jpeg" alt=""></div>
+      <div class="thumb"><img src="../images/scenery9.jpeg" alt=""></div>
+      <div class="thumb"><img src="../images/scenery10.jpeg" alt=""></div>
+      <div class="thumb"><img src="../images/scenery11.jpeg" alt=""></div>
+
+    </div>
+
+    <div style="text-align:center">
+      <a href="../portfolio.html" class="back-btn">← Back to Portfolio</a>
+    </div>
+  </main>
+
+ 
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <button class="lb-close" aria-label="Close">×</button>
+    <button class="lb-btn lb-prev" aria-label="Previous">‹</button>
+    <img id="lbImg" alt="">
+    <button class="lb-btn lb-next" aria-label="Next">›</button>
+    <div class="lb-counter" id="lbCounter"></div>
+  </div>
+
+  <footer>
+    © H’Photography and Tours
+  </footer>
+
+  <script>
+    // Lightbox functionality
+    const thumbs = Array.from(document.querySelectorAll('#gallery img'));
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbCounter = document.getElementById('lbCounter');
+    const btnPrev = lightbox.querySelector('.lb-prev');
+    const btnNext = lightbox.querySelector('.lb-next');
+    const btnClose = lightbox.querySelector('.lb-close');
+
+    let current = 0;
+
+    function openLightbox(index){
+      current = index;
+      const src = thumbs[current].getAttribute('src');
+      const alt = thumbs[current].getAttribute('alt') || '';
+      lbImg.src = src; lbImg.alt = alt;
+      lbCounter.textContent = (current+1) + ' / ' + thumbs.length;
+      lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+    }
+
+    function closeLightbox(){
+      lightbox.classList.remove('open');
+      lightbox.setAttribute('aria-hidden','true');
+      document.body.style.overflow='';
+      lbImg.src = lbImg.src;
+    }
+
+    function nextImg(){ current = (current + 1) % thumbs.length; openLightbox(current); }
+    function prevImg(){ current = (current - 1 + thumbs.length) % thumbs.length; openLightbox(current); }
+
+    thumbs.forEach((img, i) => {
+      img.addEventListener('click', () => openLightbox(i));
+      img.style.cursor = 'zoom-in';
+    });
+
+    btnNext.addEventListener('click', e => { e.stopPropagation(); nextImg(); });
+    btnPrev.addEventListener('click', e => { e.stopPropagation(); prevImg(); });
+    btnClose.addEventListener('click', e => { e.stopPropagation(); closeLightbox(); });
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') nextImg();
+      if (e.key === 'ArrowLeft') prevImg();
+    });
+  </script>
+</body>
+</html>
