@@ -17,20 +17,56 @@
     *,*::before,*::after{box-sizing:border-box}
     img{max-width:100%;display:block}
     h1,h2{font-family:Cinzel,Georgia,serif;font-weight:700;margin:0 0 .5rem}
-
     .container{max-width:1100px;margin:auto;padding:0 20px}
-    .nav{position:sticky;top:0;background:var(--nav);border-bottom:1px solid #000;color:#fff;z-index:30}
-    .nav-inner{display:flex;align-items:center;justify-content:space-between;height:56px}
-    .brand{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:#fff;font-weight:700}
-    .brand span{font-family:Cinzel,serif}
-    .nav a{text-decoration:none;color:#eee;font-weight:600;margin-left:20px}
-    .nav a:hover{color:#fff}
 
+    /* NAV — mobile-safe */
+    .nav{position:sticky;top:0;background:var(--nav);border-bottom:1px solid #000;color:#fff;z-index:100}
+    .nav-inner{
+      display:grid;
+      grid-template-columns:auto 1fr auto; /* brand | spacer | links/hamburger */
+      align-items:center;
+      height:56px;
+      gap:12px;
+    }
+    .brand{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:#fff;font-weight:700;min-width:0}
+    .brand span{font-family:Cinzel,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    /* Desktop links inline */
+    .nav-links{display:flex;gap:20px;align-items:center;justify-self:end}
+    .nav-links a{text-decoration:none;color:#eee;font-weight:600}
+    .nav-links a:hover{color:#fff}
+
+    .hamburger{
+      display:none;background:transparent;border:0;color:#fff;font-size:24px;line-height:1;cursor:pointer;justify-self:end
+    }
+
+    /* Mobile menu panel */
+    @media (max-width:880px){
+      .hamburger{display:block}
+      .nav-links{
+        position:fixed;
+        top:56px; left:0; right:0;
+        background:#15171a;
+        border-bottom:1px solid #000;
+        display:none;
+        flex-direction:column;
+        align-items:flex-start;
+        padding:16px 20px 20px;
+        gap:12px;
+        z-index:120;
+      }
+      .nav-links a{color:#f0f0f0}
+      .nav-links.open{display:flex}
+    }
+    body.nav-open{overflow:hidden}
+
+    /* HERO */
     .hero{position:relative;overflow:hidden;height:38vh;min-height:260px;display:grid;place-items:center}
     .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
     .hero::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.45)}
     .hero h1{position:relative;color:#fff;font-size:clamp(28px,4vw,44px);text-shadow:0 1px 3px rgba(0,0,0,.6)}
 
+    /* GRID */
     .grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr);margin:40px 0}
     .thumb{border-radius:10px;overflow:hidden;border:1px solid var(--border);cursor:zoom-in;aspect-ratio:4/5}
     .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
@@ -38,7 +74,7 @@
     @media (max-width:880px){.grid{grid-template-columns:repeat(2,1fr)}}
     @media (max-width:580px){.grid{grid-template-columns:1fr}}
 
-    /* Back button as last grid row */
+    /* Back button row */
     .back-row{grid-column:1 / -1;display:flex;justify-content:center;margin-top:6px}
     .back-btn{display:inline-block;text-decoration:none;padding:10px 16px;background:var(--accent);color:#fff;border-radius:8px}
 
@@ -73,25 +109,28 @@
   <nav class="nav">
     <div class="container nav-inner">
       <a href="../portfolio.html" class="brand">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/>
           <circle cx="12" cy="12" r="3" fill="#fff"/>
         </svg>
         <span>SENYOR PHOTOGRAPHY</span>
       </a>
-      <div>
+
+      <div class="nav-links" id="navLinks">
         <a href="../index.html">HOME</a>
         <a href="../about.html">ABOUT</a>
         <a href="../services.html">SERVICES</a>
-        <a href="../portfolio.html">PORTFOLIO</a>
+        <a href="../portfolio.html" aria-current="page">PORTFOLIO</a>
       </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">☰</button>
     </div>
   </nav>
 
   <!-- HERO -->
   <header class="hero">
     <img src="../images/proposal1.jpeg" alt="">
-    <h1>Kimono Portraits</h1>
+    <h1>Proposal Portraits</h1>
   </header>
 
   <!-- GALLERY -->
@@ -105,8 +144,8 @@
       <div class="thumb"><img src="../images/proposal2.jpeg" alt=""></div>
       <div class="thumb"><img src="../images/proposal3.jpeg" alt=""></div>
       <div class="thumb"><img src="../images/proposal4.jpeg" alt=""></div>
+      <div class="thumb"><img src="../images/proposal5.jpg" alt=""></div>
 
-      <!-- Back button spans full width at bottom of the grid -->
       <div class="back-row">
         <a href="../portfolio.html" class="back-btn">← Back to Portfolio</a>
       </div>
@@ -127,7 +166,32 @@
   </footer>
 
   <script>
-    // Lightbox functionality
+    /* Mobile nav toggle + lock body scroll */
+    (function(){
+      const hamburger = document.getElementById('hamburger');
+      const navLinks  = document.getElementById('navLinks');
+
+      function openMenu(){
+        navLinks.classList.add('open');
+        document.body.classList.add('nav-open');
+      }
+      function closeMenu(){
+        navLinks.classList.remove('open');
+        document.body.classList.remove('nav-open');
+      }
+
+      hamburger?.addEventListener('click', () => {
+        navLinks.classList.contains('open') ? closeMenu() : openMenu();
+      });
+
+      // Close on link tap
+      navLinks?.querySelectorAll('a')?.forEach(a => a.addEventListener('click', closeMenu));
+
+      // Close if resized to desktop
+      window.addEventListener('resize', () => { if (window.innerWidth > 880) closeMenu(); });
+    })();
+
+    // Lightbox
     const thumbs = Array.from(document.querySelectorAll('#gallery .thumb img'));
     const lightbox = document.getElementById('lightbox');
     const lbImg = document.getElementById('lbImg');

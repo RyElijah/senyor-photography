@@ -19,12 +19,52 @@
     h1,h2{font-family:Cinzel,Georgia,serif;font-weight:700;margin:0 0 .5rem}
 
     .container{max-width:1100px;margin:auto;padding:0 20px}
-    .nav{position:sticky;top:0;background:var(--nav);border-bottom:1px solid #000;color:#fff;z-index:30}
-    .nav-inner{display:flex;align-items:center;justify-content:space-between;height:56px}
-    .brand{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:#fff;font-weight:700}
-    .brand span{font-family:Cinzel,serif}
-    .nav a{text-decoration:none;color:#eee;font-weight:600;margin-left:20px}
-    .nav a:hover{color:#fff}
+
+    /* NAV (fixed for mobile overlap) */
+    .nav{position:sticky;top:0;background:var(--nav);border-bottom:1px solid #000;color:#fff;z-index:100}
+    .nav-inner{
+      display:grid;
+      grid-template-columns:auto 1fr auto; /* brand | spacer | links/hamburger */
+      align-items:center;
+      height:56px;
+      gap:12px;
+    }
+    .brand{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:#fff;font-weight:700;min-width:0}
+    .brand span{font-family:Cinzel,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    /* Desktop links (inline) */
+    .nav-links{
+      display:flex; gap:20px; align-items:center; justify-self:end;
+    }
+    .nav-links a{text-decoration:none;color:#eee;font-weight:600}
+    .nav-links a:hover{color:#fff}
+
+    .hamburger{
+      display:none; background:transparent; border:0; color:#fff;
+      font-size:24px; line-height:1; cursor:pointer; justify-self:end;
+    }
+
+    /* Mobile menu panel */
+    @media (max-width:880px){
+      .hamburger{display:block}
+      /* hide inline links and use panel */
+      .nav-links{
+        position:fixed;
+        top:56px; left:0; right:0;
+        background:#15171a;
+        border-bottom:1px solid #000;
+        display:none;
+        flex-direction:column;
+        align-items:flex-start;
+        padding:16px 20px 20px;
+        gap:12px;
+        z-index:120;
+      }
+      .nav-links a{color:#f0f0f0}
+      .nav-links.open{display:flex}
+    }
+    /* lock background scroll when menu is open */
+    body.nav-open{overflow:hidden}
 
     .hero{position:relative;overflow:hidden;height:38vh;min-height:260px;display:grid;place-items:center}
     .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -70,18 +110,21 @@
   <nav class="nav">
     <div class="container nav-inner">
       <a href="../portfolio.html" class="brand">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/>
           <circle cx="12" cy="12" r="3" fill="#fff"/>
         </svg>
         <span>SENYOR PHOTOGRAPHY</span>
       </a>
-      <div>
+
+      <div class="nav-links" id="navLinks">
         <a href="../index.html">HOME</a>
         <a href="../about.html">ABOUT</a>
         <a href="../services.html">SERVICES</a>
-        <a href="../portfolio.html">PORTFOLIO</a>
+        <a href="../portfolio.html" aria-current="page">PORTFOLIO</a>
       </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">☰</button>
     </div>
   </nav>
 
@@ -114,10 +157,26 @@
       <div class="thumb"><img src="../images/kimono14.jpg" alt=""></div>
       <div class="thumb"><img src="../images/kimono15.jpg" alt=""></div>
       <div class="thumb"><img src="../images/kimono16.jpg" alt=""></div>
-
-
-
- 
+      <div class="thumb"><img src="../images/kimono17.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono18.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono19.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono20.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono21.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono22.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono23.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono24.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono25.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono26.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono27.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono28.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono29.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono30.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono31.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono32.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono33.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono34.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono35.jpg" alt=""></div>
+      <div class="thumb"><img src="../images/kimono36.jpg" alt=""></div>
     </div>
 
     <div style="text-align:center">
@@ -139,6 +198,31 @@
   </footer>
 
   <script>
+    // Mobile nav: toggle panel + lock body scroll
+    (function(){
+      const hamburger = document.getElementById('hamburger');
+      const navLinks  = document.getElementById('navLinks');
+
+      function openMenu(){
+        navLinks.classList.add('open');
+        document.body.classList.add('nav-open');
+      }
+      function closeMenu(){
+        navLinks.classList.remove('open');
+        document.body.classList.remove('nav-open');
+      }
+
+      hamburger?.addEventListener('click', () => {
+        navLinks.classList.contains('open') ? closeMenu() : openMenu();
+      });
+
+      // close on link tap
+      navLinks?.querySelectorAll('a')?.forEach(a => a.addEventListener('click', closeMenu));
+
+      // close if resized to desktop
+      window.addEventListener('resize', () => { if (window.innerWidth > 880) closeMenu(); });
+    })();
+
     // Lightbox functionality
     const thumbs = Array.from(document.querySelectorAll('#gallery img'));
     const lightbox = document.getElementById('lightbox');

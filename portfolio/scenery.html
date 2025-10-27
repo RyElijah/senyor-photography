@@ -17,20 +17,50 @@
     *,*::before,*::after{box-sizing:border-box}
     img{max-width:100%;display:block}
     h1,h2{font-family:Cinzel,Georgia,serif;font-weight:700;margin:0 0 .5rem}
-
     .container{max-width:1100px;margin:auto;padding:0 20px}
-    .nav{position:sticky;top:0;background:var(--nav);border-bottom:1px solid #000;color:#fff;z-index:30}
-    .nav-inner{display:flex;align-items:center;justify-content:space-between;height:56px}
-    .brand{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:#fff;font-weight:700}
-    .brand span{font-family:Cinzel,serif}
-    .nav a{text-decoration:none;color:#eee;font-weight:600;margin-left:20px}
-    .nav a:hover{color:#fff}
 
+    /* ===== NAV (mobile-safe) ===== */
+    .nav{position:sticky;top:0;background:var(--nav);border-bottom:1px solid #000;color:#fff;z-index:100}
+    .nav-inner{
+      display:grid;
+      grid-template-columns:auto 1fr auto; /* brand | spacer | links/hamburger */
+      align-items:center;
+      height:56px;
+      gap:12px;
+    }
+    .brand{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:#fff;font-weight:700;min-width:0}
+    .brand span{font-family:Cinzel,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    /* desktop links inline */
+    .nav-links{display:flex;gap:20px;align-items:center;justify-self:end}
+    .nav-links a{text-decoration:none;color:#eee;font-weight:600}
+    .nav-links a:hover{color:#fff}
+
+    .hamburger{
+      display:none;background:transparent;border:0;color:#fff;font-size:24px;line-height:1;cursor:pointer;justify-self:end
+    }
+
+    /* mobile panel */
+    @media (max-width:880px){
+      .hamburger{display:block}
+      .nav-links{
+        position:fixed;top:56px;left:0;right:0;
+        background:#15171a;border-bottom:1px solid #000;
+        display:none;flex-direction:column;align-items:flex-start;
+        padding:16px 20px 20px;gap:12px;z-index:120;
+      }
+      .nav-links a{color:#f0f0f0}
+      .nav-links.open{display:flex}
+    }
+    body.nav-open{overflow:hidden}
+
+    /* ===== HERO ===== */
     .hero{position:relative;overflow:hidden;height:38vh;min-height:260px;display:grid;place-items:center}
     .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
     .hero::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.45)}
     .hero h1{position:relative;color:#fff;font-size:clamp(28px,4vw,44px);text-shadow:0 1px 3px rgba(0,0,0,.6)}
 
+    /* ===== GRID ===== */
     .grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr);margin:40px 0}
     .thumb{border-radius:10px;overflow:hidden;border:1px solid var(--border);cursor:zoom-in}
     .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
@@ -41,7 +71,7 @@
     footer{text-align:center;border-top:1px solid var(--border);padding:16px 0;color:#666;font-size:.9rem}
     .back-btn{display:inline-block;margin-top:16px;text-decoration:none;padding:10px 16px;background:var(--accent);color:#fff;border-radius:8px}
 
-    /* LIGHTBOX */
+    /* ===== LIGHTBOX ===== */
     .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:60}
     .lightbox.open{display:flex}
     .lightbox img{max-width:min(96vw,1100px);max-height:90vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
@@ -70,46 +100,48 @@
   <nav class="nav">
     <div class="container nav-inner">
       <a href="../portfolio.html" class="brand">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/>
           <circle cx="12" cy="12" r="3" fill="#fff"/>
         </svg>
         <span>SENYOR PHOTOGRAPHY</span>
       </a>
-      <div>
+
+      <div class="nav-links" id="navLinks">
         <a href="../index.html">HOME</a>
         <a href="../about.html">ABOUT</a>
         <a href="../services.html">SERVICES</a>
-        <a href="../portfolio.html">PORTFOLIO</a>
+        <a href="../portfolio.html" aria-current="page">PORTFOLIO</a>
       </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">☰</button>
     </div>
   </nav>
 
-
+  <!-- HERO -->
   <header class="hero">
     <img src="../images/scenery11.jpeg" alt="">
     <h1>Scenery</h1>
   </header>
 
- 
+  <!-- GALLERY -->
   <main class="container">
     <p style="text-align:center;max-width:700px;margin:24px auto;color:#555">
       A love letter to locations. Wide frames, honest light, and small human moments within grand spaces—images that feel like stepping back into the air, color, and rhythm of the day.
     </p>
 
     <div class="grid" id="gallery">
-      <div class="thumb"><img src="../images/scenery1.jpeg" alt=""></div>
-      <div class="thumb"><img src="../images/scenery2.jpeg" alt=""></div>
-      <div class="thumb"><img src="../images/scenery3.jpeg" alt=""></div>
-      <div class="thumb"><img src="../images/scenery4.jpeg" alt=""></div>
-      <div class="thumb"><img src="../images/scenery5.jpeg" alt=""></div>
+      <div class="thumb"><img src="../images/scenery1.jpeg"  alt=""></div>
+      <div class="thumb"><img src="../images/scenery2.jpeg"  alt=""></div>
+      <div class="thumb"><img src="../images/scenery3.jpeg"  alt=""></div>
+      <div class="thumb"><img src="../images/scenery4.jpeg"  alt=""></div>
+      <div class="thumb"><img src="../images/scenery5.jpeg"  alt=""></div>
       <div class="thumb"><img src="../images/selected6.jpeg" alt=""></div>
-      <div class="thumb"><img src="../images/scenery7.jpeg" alt=""></div>
-      <div class="thumb"><img src="../images/scenery8.jpeg" alt=""></div>
-      <div class="thumb"><img src="../images/scenery9.jpeg" alt=""></div>
+      <div class="thumb"><img src="../images/scenery7.jpeg"  alt=""></div>
+      <div class="thumb"><img src="../images/scenery8.jpeg"  alt=""></div>
+      <div class="thumb"><img src="../images/scenery9.jpeg"  alt=""></div>
       <div class="thumb"><img src="../images/scenery10.jpeg" alt=""></div>
       <div class="thumb"><img src="../images/scenery11.jpeg" alt=""></div>
-
     </div>
 
     <div style="text-align:center">
@@ -117,7 +149,7 @@
     </div>
   </main>
 
- 
+  <!-- LIGHTBOX -->
   <div id="lightbox" class="lightbox" aria-hidden="true">
     <button class="lb-close" aria-label="Close">×</button>
     <button class="lb-btn lb-prev" aria-label="Previous">‹</button>
@@ -131,6 +163,28 @@
   </footer>
 
   <script>
+    /* Mobile nav toggle + lock body scroll */
+    (function(){
+      const hamburger = document.getElementById('hamburger');
+      const navLinks  = document.getElementById('navLinks');
+
+      function openMenu(){
+        navLinks.classList.add('open');
+        document.body.classList.add('nav-open');
+      }
+      function closeMenu(){
+        navLinks.classList.remove('open');
+        document.body.classList.remove('nav-open');
+      }
+
+      hamburger?.addEventListener('click', () => {
+        navLinks.classList.contains('open') ? closeMenu() : openMenu();
+      });
+
+      navLinks?.querySelectorAll('a')?.forEach(a => a.addEventListener('click', closeMenu));
+      window.addEventListener('resize', () => { if (window.innerWidth > 880) closeMenu(); });
+    })();
+
     // Lightbox functionality
     const thumbs = Array.from(document.querySelectorAll('#gallery img'));
     const lightbox = document.getElementById('lightbox');
